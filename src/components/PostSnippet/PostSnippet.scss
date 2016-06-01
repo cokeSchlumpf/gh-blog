@@ -1,0 +1,157 @@
+/**
+ * React Starter Kit (https://www.reactstarterkit.com/)
+ *
+ * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.txt file in the root directory of this source tree.
+ */
+
+@import '../variables.scss';
+
+ // -----------------------------------------------------------------------------
+ // Articles
+ // -----------------------------------------------------------------------------
+
+
+ .post h2{
+ 	margin-top: 0;
+ }
+
+ .post p{
+ 	line-height: 28px;
+ }
+
+ .post h2 a,
+ .post-template h1{
+ 	font-size: 44px;
+ 	margin-bottom: 10px;
+ }
+
+ .post-template h2,
+ .post-template h3,
+ .post-template h4,
+ .post-template h5,
+ .post-template h6{
+ 	font-family: $h-font;
+ 	font-weight: $bold;
+ }
+
+ .post{
+ 	margin-bottom: 60px;
+ 	padding-bottom: 60px;
+ 	border-bottom: 1px solid #ececec;
+ }
+
+
+ .post img{
+ 	max-width: 100%;
+ 	height: auto;
+ }
+
+ .post-info{
+ 	color: lighten($b-colour, 50%);
+ 	font-family: $h-font;
+ 	font-weight: $light;
+ 	font-size: 18px;
+ 	margin-bottom: 40px;
+ 	line-height: 30px;
+ }
+
+
+ .share-buttons{
+ 	list-style: none;
+ 	padding: 0;
+ }
+
+ .share-buttons li{
+ 	display: inline;
+ 	font-family: $h-font;
+ 	font-weight: $light;
+ 	font-size: 13px;
+ 	color: $s-colour;
+ 	margin-right: 4px;
+ }
+
+ .share-buttons li a{
+ 	font-size: 15px;
+ }
+
+
+
+ .comments{
+ 	margin-bottom: 60px;
+ }
+
+
+ .tags{
+ 	list-style: none;
+ 	padding: 0;
+ 	margin: 0;
+ 	display: inline-block;
+ }
+
+
+ .tag-title{
+ 	font-family: $h-font;
+ 	font-weight: $light;
+ 	border-bottom: 1px solid #ececec;
+ 	margin-bottom: 40px;
+ }
+
+ .tag-title h1{
+ 	font-size: 28px;
+ 	margin-top: 0;
+ 	margin-bottom: 40px;
+ }
+
+ .tag-title p {
+ 	color: $s-colour;
+ 	font-size: 14px;
+ 	margin-bottom: 0;
+
+ }
+
+ .btn{
+   border: solid 1px rgb( 236, 236, 236 );
+   background-color: #FFF;
+   width: 100px;
+   height: 35px;
+   display: block;
+   -webkit-border-radius: 3px;
+   -moz-border-radius: 3px;
+   border-radius: 3px;
+   text-align: center;
+   font-family: $h-font;
+   font-weight: $light;
+   line-height: 35px;
+   font-size: 13px;
+   color: #000;
+
+   &:hover{
+   	background-color: $h-colour;
+   	border-color: $h-colour;
+   	color: #FFF;
+   }
+ }
+
+ .post .btn{
+ 	width: 140px;
+ }
+
+ .post ul li{
+ 	line-height: 28px;
+ 	font-size: 15px;
+ }
+
+ .icon-twitter:before { content: '\e800'; } /* '' */
+ .icon-rss:before { content: '\e801'; } /* '' */
+ .icon-menu:before { content: '\e802'; } /* '' */
+ .icon-facebook-squared:before { content: '\e803'; } /* '' */
+ .icon-gplus:before { content: '\e804'; } /* '' */
+ .icon-linkedin:before { content: '\e805'; } /* '' */
+ .icon-behance:before { content: '\e806'; } /* '' */
+ .icon-cancel:before { content: '\e807'; } /* '' */
+ .icon-dribbble:before { content: '\e808'; } /* '' */
+ .icon-instagram:before { content: '\e809'; } /* '' */
+ .icon-github:before { content: '\e80a'; } /* '' */

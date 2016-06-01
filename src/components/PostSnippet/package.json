@@ -1,0 +1,6 @@
+{
+  "name": "PostSippet",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./PostSnippet.js"
+}
