@@ -1,7 +1,14 @@
 import _ from 'lodash';
 import GitHubApi from 'github';
+import NodeCache from 'node-cache';
+import Promise from 'bluebird';
+
 import fetch from './fetch';
 import { application as config } from '../config';
+
+const cache = new NodeCache({
+  stdTTL: 600
+});
 
 const github = () => {
   const github = new GitHubApi({
@@ -24,12 +31,71 @@ const github = () => {
   return github;
 }
 
+export const getBlob = (owner, repo, sha) => {
+  const key = `${owner}/${repo}/blobs/${sha}`;
+
+  return new Promise((res, rej) => {
+    cache.get(key, (err, value) => {
+      if (!value) {
+        github().gitdata.getBlob({
+          user: owner,
+          repo: repo,
+          sha: sha
+        }, handler(res, rej, {
+          key: key,
+          ttl: 600
+        }));
+      } else {
+        res(value);
+      }
+    });
+  });
+}
+
+export const getCommit = (owner, repo, sha) => {
+  const key = `${owner}/${repo}/commits/${sha}`;
+
+  return new Promise((res, rej) => {
+    cache.get(key, (err, value) => {
+      if (!value) {
+        github().repos.getCommit({
+          user: owner,
+          repo: repo,
+          sha: sha
+        }, handler(res, rej, {
+          key: key,
+          ttl: 1200
+        }))
+      } else {
+        res(value);
+      }
+    });
+  });
+}
+
+export const getCommits = (owner, repo, path) => {
+  const key = `${owner}/${repo}/commits/${path}`;
+
+  return new Promise((res, rej) => {
+    cache.get(key, (err, value) => {
+      if (!value) {
+        github().repos.getCommits({
+          user: owner,
+          repo: repo,
+          path: path
+        }, handler(res, rej, {
+          key: key,
+          ttl: 60
+        }));
+      } else {
+        res(value);
+      }
+    })
+  });
+}
+
 export const getText = (owner, repo, sha) => {
-  return new Promise((res, rej) => github().gitdata.getBlob({
-    user: owner,
-    repo: repo,
-    sha: sha
-  }, handler(res, rej))).then(response => {
+  return getBlob(owner, repo, sha).then(response => {
     return Buffer.from(response.content, 'base64').toString('utf8');
   });
 }
@@ -51,28 +117,78 @@ export const getTextFile = (owner, repo, path, defaultContent) => {
 }
 
 export const getRepoTree = (owner, repo) => {
-  return new Promise((res, rej) => github().gitdata.getTree({
-    user: owner,
-    repo: repo,
-    sha: 'master',
-    recursive: true
-  }, handler(res, rej)));
+  const key = `${owner}/${repo}/tree`;
+
+  return new Promise((res, rej) => {
+    cache.get(key, (err, value) => {
+      if (!value) {
+        github().gitdata.getTree({
+          user: owner,
+          repo: repo,
+          sha: 'master',
+          recursive: true
+        }, handler(res, rej, {
+          key: key,
+          ttl: 60
+        }));
+      } else {
+        res(value);
+      }
+    });
+  });
 }
 
 export const getUserData = (owner) => {
-  return new Promise((res, rej) => github().user.getFrom({
-    user: owner
-  }, handler(res, rej)));
+  const key = `${owner}/userdata`;
+
+  return new Promise((res, rej) => {
+    cache.get(key, (err, value) => {
+      if (!value) {
+        github().user.getFrom({
+          user: owner
+        }, handler(res, rej, {
+          key: key,
+          ttl: 600
+        }));
+      } else {
+        res(value);
+      }
+    });
+  });
 }
 
-export const handler = (resolve, reject) => {
+export const handler = (resolve, reject, {key, ttl}) => {
   return (err, res) => {
     if (err != null) {
+      console.error(err);
+      console.error(err.stack);
       reject(err);
     } else {
+      if (key) cache.set(key, res, ttl);
       resolve(res);
     }
   }
+}
+
+export const renderMarkdown = (owner, repo, id, text, mode) => {
+  const key = `${owner}/${repo}/${id}`;
+
+  return new Promise((res, rej) => {
+    cache.get(key, (err, value) => {
+      if (!value) {
+        github().markdown.render({
+          text: text,
+          mode: mode || 'markdown',
+          context: `${owner}/${repo}`
+        }, handler(res, rej, {
+          key: key,
+          ttl: 600
+        }));
+      } else {
+        res(value);
+      }
+    });
+  });
 }
 
 export default github;

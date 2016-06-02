@@ -42,6 +42,9 @@ const BlogType = new ObjectType({
     title: {
       type: new NonNull(StringType)
     },
+    url: {
+      type: new NonNull(StringType)
+    },
     user: {
       type: new NonNull(StringType)
     },

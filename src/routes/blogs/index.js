@@ -6,10 +6,12 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE.txt file in the root directory of this source tree.
  */
-
+import _ from 'lodash';
 import { Base64 } from 'js-base64';
 import React from 'react';
+import NodeCache from 'node-cache';
 import fetch from '../../core/fetch-graphql';
+import { getTextFile } from '../../core/github';
 import s from 'stripmargin';
 
 import Content from './Content.js';
@@ -22,6 +24,7 @@ const blogQuery = (owner, repo) => s.stripMargin(
   |    repo
   |    owner {
   |      name
+  |      avatar
   |      twitter
   |      github
   |    }
@@ -41,9 +44,10 @@ export default {
   async action({next, params}) {
     const child = await next();
 
-
     const result = child(params.owner, params.repo).catch(e => {
       console.log(e);
+      console.error(e);
+      console.log(e.stack);
       return <Content content="is nicht" title="IS NICHT!" />
     });
 
@@ -66,12 +70,13 @@ export default {
       path: '/posts/:id',
 
       async action(context) {
+        console.log(context);
         return (owner, repo) => {
           return new Promise((resolve, reject) => {
             try {
               const postsQuery = s.stripMargin(
                 `{
-                |  posts {
+                |  posts(owner: "${owner}", repo: "${repo}") {
                 |    key,
                 |    title,
                 |    link,
@@ -81,6 +86,8 @@ export default {
                 |  }
                 }`);
 
+              console.log(postsQuery);
+
               const renderQuery = s.stripMargin(
                 `{
                 |  render(
@@ -89,6 +96,7 @@ export default {
                 |      "${Base64.encode(postsQuery)}"
                 |    ]
                 |    templates: [
+                |      "blog.template.posts",
                 |      "blog.template.index"
                 |    ]
                 |    selects: [
@@ -102,7 +110,14 @@ export default {
 
               resolve(fetch(renderQuery).then(res => {
                 const data = JSON.parse(Base64.decode(res.data.render.data));
-                return <Content content={ res.data.render.result } title={ data.blog.title }/>;
+
+                return Promise.all(
+                  _.map(data.blog.template.styles, style => {
+                    console.log(style);
+                    return getTextFile(owner, repo, style);
+                  })).then(styles => {
+                  return <Content content={ res.data.render.result } title={ data.blog.title } styles={ styles } />;
+                });
               }));
             } catch (error) {
               reject(error);

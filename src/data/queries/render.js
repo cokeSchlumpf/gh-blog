@@ -40,11 +40,18 @@ const render = {
         }, { }))),
         result: _.reduce(templates, (collect, templateKey) => {
           const template = _.get(data, templateKey);
-
           return _.assign({}, collect, {
             content: jade.render(template, collect)
           });
         }, data).content
+      };
+    }).catch(e => {
+      console.log(e);
+      console.error(e);
+      console.log(e.stack);
+      return {
+        data: {},
+        result: '<div>Error</div>'
       };
     });
   }

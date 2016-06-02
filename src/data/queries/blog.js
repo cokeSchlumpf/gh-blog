@@ -32,6 +32,7 @@ const blog = {
 
         return {
           title: config.title,
+          url: `/blogs/${owner}/${repo}`,
           user: owner,
           repo: repo,
           owner: {
@@ -41,7 +42,7 @@ const blog = {
             github: user.html_url
           },
           template: {
-            styles: _.map(_.filter(tree, file => _.endsWith(file.path, '.css')), file => `https://raw.githubusercontent.com/${owner}/${repo}/master/${file.path}`),
+            styles: _.map(_.filter(tree, file => _.endsWith(file.path, '.css')), file => file.path),
             index: pIndexTemplate,
             posts: pPostsTemplate,
             post: pPostTemplate
