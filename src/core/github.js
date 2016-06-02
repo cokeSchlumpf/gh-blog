@@ -94,6 +94,14 @@ export const getCommits = (owner, repo, path) => {
   });
 }
 
+export const getFile = (owner, repo, path) => {
+  return getRepoTree(owner, repo).then(({tree}) => {
+    return _.find(tree, {
+      path: path
+    });
+  });
+}
+
 export const getText = (owner, repo, sha) => {
   return getBlob(owner, repo, sha).then(response => {
     return Buffer.from(response.content, 'base64').toString('utf8');
@@ -101,11 +109,7 @@ export const getText = (owner, repo, sha) => {
 }
 
 export const getTextFile = (owner, repo, path, defaultContent) => {
-  return getRepoTree(owner, repo).then(({tree}) => {
-    const blob = _.find(tree, {
-      path: path
-    });
-
+  return getFile(owner, repo, path).then(blob => {
     if (!blob && defaultContent) {
       return defaultContent;
     } else if (!blob) {

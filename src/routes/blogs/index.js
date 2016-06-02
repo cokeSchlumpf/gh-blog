@@ -11,7 +11,6 @@ import { Base64 } from 'js-base64';
 import React from 'react';
 import NodeCache from 'node-cache';
 import fetch from '../../core/fetch-graphql';
-import { getTextFile } from '../../core/github';
 import s from 'stripmargin';
 
 import Content from './Content.js';
@@ -60,17 +59,6 @@ export default {
       path: '/',
 
       async action(context) {
-        console.log(context);
-        return <div>Blog</div>;
-      }
-
-    },
-    {
-
-      path: '/posts/:id',
-
-      async action(context) {
-        console.log(context);
         return (owner, repo) => {
           return new Promise((resolve, reject) => {
             try {
@@ -85,8 +73,6 @@ export default {
                 |    contentSnippet
                 |  }
                 }`);
-
-              console.log(postsQuery);
 
               const renderQuery = s.stripMargin(
                 `{
@@ -110,19 +96,67 @@ export default {
 
               resolve(fetch(renderQuery).then(res => {
                 const data = JSON.parse(Base64.decode(res.data.render.data));
-
-                return Promise.all(
-                  _.map(data.blog.template.styles, style => {
-                    console.log(style);
-                    return getTextFile(owner, repo, style);
-                  })).then(styles => {
-                  return <Content content={ res.data.render.result } title={ data.blog.title } styles={ styles } />;
-                });
+                return <Content content={ res.data.render.result } title={ data.blog.title } styles={ data.blog.template.styles } />;
               }));
             } catch (error) {
               reject(error);
             }
-          })
+          });
+        };
+      }
+
+    },
+    {
+
+      path: '/posts/:key',
+
+      async action({params}) {
+        return (owner, repo) => {
+          return new Promise((resolve, reject) => {
+            try {
+              const postQuery = s.stripMargin(
+                `{
+                |  post(owner: "${owner}", repo: "${repo}", key: "${params.key}") {
+                |    key,
+                |    title,
+                |    link,
+                |    author,
+                |    publishedDate,
+                |    lastModifiedDate,
+                |    contentSnippet,
+                |    content
+                |  }
+                }`);
+
+              const renderQuery = s.stripMargin(
+                `{
+                |  render(
+                |    queries: [
+                |      "${Base64.encode(blogQuery(owner, repo))}",
+                |      "${Base64.encode(postQuery)}"
+                |    ]
+                |    templates: [
+                |      "blog.template.post",
+                |      "blog.template.index"
+                |    ]
+                |    selects: [
+                |      "blog.title",
+                |      "blog.template.styles",
+                |      "post.title"
+                |    ]) {
+                |      data,
+                |      result
+                |    }
+                }`);
+
+              resolve(fetch(renderQuery).then(res => {
+                const data = JSON.parse(Base64.decode(res.data.render.data));
+                return <Content content={ res.data.render.result } title={ `${data.post.title} - ${data.blog.title}` } styles={ data.blog.template.styles } />;
+              }));
+            } catch (error) {
+              reject(error);
+            }
+          });
         };
       }
 

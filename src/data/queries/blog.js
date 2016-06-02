@@ -30,25 +30,28 @@ const blog = {
       ({tree}, user, pConfig, pIndexTemplate, pPostsTemplate, pPostTemplate) => {
         const config = JSON.parse(pConfig);
 
-        return {
-          title: config.title,
-          url: `/blogs/${owner}/${repo}`,
-          user: owner,
-          repo: repo,
-          owner: {
-            name: user.name,
-            avatar: user.avatar_url,
-            twitter: config.twitter,
-            github: user.html_url
-          },
-          template: {
-            styles: _.map(_.filter(tree, file => _.endsWith(file.path, '.css')), file => file.path),
-            index: pIndexTemplate,
-            posts: pPostsTemplate,
-            post: pPostTemplate
-          }
-        };
+        return Promise.all(_.map(_.filter(tree, file => _.endsWith(file.path, '.css')), style => getTextFile(owner, repo, style.path))).then(styles => {
+          return {
+            title: config.title,
+            url: `/blogs/${owner}/${repo}`,
+            user: owner,
+            repo: repo,
+            owner: {
+              name: user.name,
+              avatar: user.avatar_url,
+              twitter: config.twitter,
+              github: user.html_url
+            },
+            template: {
+              styles: styles,
+              index: pIndexTemplate,
+              posts: pPostsTemplate,
+              post: pPostTemplate
+            }
+          };
+        });
       });
+
   }
 };
 

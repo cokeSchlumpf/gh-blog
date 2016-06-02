@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import Moment from 'moment';
 import Promise from 'bluebird';
-import { getCommits, renderMarkdown } from './github';
+import { getCommits, getText, renderMarkdown } from './github';
 
 export const renderPost = (owner, repo, post) => {
-  return getCommits(owner, repo, post.path).then(commits => {
-    const commit = _.last(commits);
+  return Promise.join(getText(owner, repo, post.sha), getCommits(owner, repo, post.path), (pContent, pCommits) => {
+    const commit = _.last(pCommits);
 
-    let content = _.trim(post.content.substr(post.content.indexOf('\n') + 1), '\n');
+    let content = _.trim(pContent.substr(pContent.indexOf('\n') + 1), '\n');
     let contentSnippet = content;
     let split = content.indexOf('---');
 
@@ -18,17 +18,18 @@ export const renderPost = (owner, repo, post) => {
 
     return {
       key: post.path,
-      title: _.trim(_.trimStart(_.head(_.split(post.content, '\n')), '#')),
-      link: `/blog/${owner}/${repo}/post/${post.path}`,
+      title: _.trim(_.trimStart(_.head(_.split(pContent, '\n')), '#')),
+      link: `/blog/${owner}/${repo}/posts/${post.path}`,
       author: commit.commit.author.name,
       publishedDate: Moment(new Date(commit.commit.author.date)).format('MMMM DD, YYYY'),
+      lastModifiedDate: Moment(new Date(_.first(pCommits).commit.author.date)).format('MMMM DD, YYYY'),
       contentSnippet: contentSnippet,
       content: content
     }
   }).then((post) => {
     return Promise.join(
-      renderMarkdown(owner, repo, post.key, post.contentSnippet),
-      renderMarkdown(owner, repo, post.key, post.content),
+      renderMarkdown(owner, repo, `${post.key}-snippet`, post.contentSnippet),
+      renderMarkdown(owner, repo, `${post.key}-content`, post.content),
       function(contentSnippet, content) {
         return _.assign({}, post, {
           content: content,

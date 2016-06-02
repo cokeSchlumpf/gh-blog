@@ -126,6 +126,10 @@ const config = {
         test: /\.jade$/,
         loader: 'jade-loader',
       },
+      {
+        test: /\.tpl$/,
+        loader: 'empty-loader'
+      }
     ],
   },
 
