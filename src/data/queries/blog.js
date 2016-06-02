@@ -35,10 +35,14 @@ const blog = {
           return {
             title: config.title,
             url: `http://${host}/blogs/${owner}/${repo}`,
+            baseUrl: `http://${host}`,
             user: owner,
             repo: repo,
             owner: {
               name: user.name,
+              location: user.location,
+              company: user.company,
+              url: user.blog,
               avatar: user.avatar_url,
               twitter: config.twitter,
               github: user.html_url

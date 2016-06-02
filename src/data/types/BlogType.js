@@ -6,6 +6,15 @@ const OwnerType = new ObjectType({
     name: {
       type: new NonNull(StringType)
     },
+    company: {
+      type: StringType
+    },
+    location: {
+      type: StringType
+    },
+    url: {
+      type: StringType
+    },
     avatar: {
       type: new NonNull(StringType)
     },
@@ -43,6 +52,9 @@ const BlogType = new ObjectType({
       type: new NonNull(StringType)
     },
     url: {
+      type: new NonNull(StringType)
+    },
+    baseUrl: {
       type: new NonNull(StringType)
     },
     user: {

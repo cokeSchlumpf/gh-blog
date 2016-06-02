@@ -20,10 +20,14 @@ const blogQuery = (owner, repo) => s.stripMargin(
   |  blog(owner: "${owner}", repo: "${repo}") {
   |    title
   |    url
+  |    baseUrl
   |    user
   |    repo
   |    owner {
   |      name
+  |      url
+  |      company
+  |      location
   |      avatar
   |      twitter
   |      github
@@ -127,8 +131,6 @@ export default {
                |  }
                }`);
 
-            console.log(postQuery);
-
             const renderQuery = s.stripMargin(
               `{
                 |  render(
@@ -151,7 +153,6 @@ export default {
                 }`);
 
             resolve(fetch(renderQuery).then(res => {
-              console.log(res);
               const data = JSON.parse(Base64.decode(res.data.render.data));
               return <Content content={ res.data.render.result } title={ `${data.post.title} - ${data.blog.title}` } styles={ data.blog.template.styles } />;
             }));

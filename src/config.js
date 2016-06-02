@@ -10,8 +10,10 @@
 /* eslint-disable max-len */
 /* jscs:disable maximumLineLength */
 
-export const port = process.env.PORT || 3000;
-export const host = process.env.WEBSITE_HOSTNAME || `localhost:${port}`;
+console.log(process.env);
+
+export const port = process.env.VCAP_APP_PORT || process.env.PORT || 3000;
+export const host = process.env.VCAP_APP_PORT ? "http://gh-blog.mybluemix.net" : process.env.WEBSITE_HOSTNAME || `localhost:${port}`;
 
 export const databaseUrl = process.env.DATABASE_URL || 'sqlite:database.sqlite';
 

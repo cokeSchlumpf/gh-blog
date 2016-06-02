@@ -13,7 +13,7 @@ export const renderPost = (owner, repo, post) => {
 
     if (split > -1) {
       contentSnippet = _.trim(content.substr(0, split), '\n');
-      content = _.trim(content.substr(split), '\n');
+      content = _.trim(content.substr(split + 4), '\n');
     }
 
     return {
