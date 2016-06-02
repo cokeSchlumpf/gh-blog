@@ -263,7 +263,7 @@
 .markdown-body .anchor {
   display: inline-block;
   padding-right: 2px;
-  margin-left: -18px;
+  margin-left: 0px;
 }
 
 .markdown-body .anchor:focus {

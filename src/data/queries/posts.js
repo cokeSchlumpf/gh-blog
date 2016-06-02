@@ -31,7 +31,7 @@ const events = {
         return renderPost(owner, repo, post);
       });
     }).all().then(posts => {
-      return _.orderBy(posts, ['publishedDate'], ['desc']);
+      return _.orderBy(posts, ['publishedTime'], ['desc']);
     });
   }
 };
