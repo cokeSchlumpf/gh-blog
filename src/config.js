@@ -10,10 +10,13 @@
 /* eslint-disable max-len */
 /* jscs:disable maximumLineLength */
 
-console.log(process.env);
+const fetchUrl = () => {
+  const vcap = JSON.parse(process.env.VCAP_APPLICATION);
+  return vcap.application_uris[0];
+}
 
 export const port = process.env.VCAP_APP_PORT || process.env.PORT || 3000;
-export const host = process.env.VCAP_APP_PORT ? "http://gh-blog.mybluemix.net" : process.env.WEBSITE_HOSTNAME || `localhost:${port}`;
+export const host = process.env.VCAP_APP_PORT ? fetchUrl() : process.env.WEBSITE_HOSTNAME || `localhost:${port}`;
 
 export const databaseUrl = process.env.DATABASE_URL || 'sqlite:database.sqlite';
 

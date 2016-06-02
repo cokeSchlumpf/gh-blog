@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Content.scss';
+import cssInsert from 'insert-css';
 
 class Content extends Component {
 
@@ -23,7 +24,8 @@ class Content extends Component {
 
     this.styles = _.map(this.props.styles, style => {
       return insertCss({
-        _getCss: () => style
+        _getCss: () => style,
+        _insertCss: () => cssInsert(style)
       });
     });
   }
