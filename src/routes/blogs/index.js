@@ -19,6 +19,7 @@ const blogQuery = (owner, repo) => s.stripMargin(
   `{
   |  blog(owner: "${owner}", repo: "${repo}") {
   |    title
+  |    url
   |    user
   |    repo
   |    owner {
@@ -42,15 +43,12 @@ export default {
 
   async action({next, params}) {
     const child = await next();
-
-    const result = child(params.owner, params.repo).catch(e => {
+    return child(params.owner, params.repo).catch(e => {
       console.log(e);
       console.error(e);
       console.log(e.stack);
       return <Content content="is nicht" title="IS NICHT!" />
     });
-
-    return result;
   },
 
   children: [
@@ -108,28 +106,31 @@ export default {
     },
     {
 
-      path: '/posts/:key',
+      path: '/posts/:id*',
 
-      async action({params}) {
+      async action(context) {
+        const params = context.params;
+
         return (owner, repo) => {
           return new Promise((resolve, reject) => {
-            try {
-              const postQuery = s.stripMargin(
-                `{
-                |  post(owner: "${owner}", repo: "${repo}", key: "${params.key}") {
-                |    key,
-                |    title,
-                |    link,
-                |    author,
-                |    publishedDate,
-                |    lastModifiedDate,
-                |    contentSnippet,
-                |    content
-                |  }
-                }`);
+            const postQuery = s.stripMargin(
+              `{
+               |  post(owner: "${owner}", repo: "${repo}", key: "${context.params.id}") {
+               |    key,
+               |    title,
+               |    link,
+               |    author,
+               |    publishedDate,
+               |    lastModifiedDate,
+               |    contentSnippet,
+               |    content
+               |  }
+               }`);
 
-              const renderQuery = s.stripMargin(
-                `{
+            console.log(postQuery);
+
+            const renderQuery = s.stripMargin(
+              `{
                 |  render(
                 |    queries: [
                 |      "${Base64.encode(blogQuery(owner, repo))}",
@@ -149,13 +150,11 @@ export default {
                 |    }
                 }`);
 
-              resolve(fetch(renderQuery).then(res => {
-                const data = JSON.parse(Base64.decode(res.data.render.data));
-                return <Content content={ res.data.render.result } title={ `${data.post.title} - ${data.blog.title}` } styles={ data.blog.template.styles } />;
-              }));
-            } catch (error) {
-              reject(error);
-            }
+            resolve(fetch(renderQuery).then(res => {
+              console.log(res);
+              const data = JSON.parse(Base64.decode(res.data.render.data));
+              return <Content content={ res.data.render.result } title={ `${data.post.title} - ${data.blog.title}` } styles={ data.blog.template.styles } />;
+            }));
           });
         };
       }

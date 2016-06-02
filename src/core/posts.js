@@ -19,7 +19,7 @@ export const renderPost = (owner, repo, post) => {
     return {
       key: post.path,
       title: _.trim(_.trimStart(_.head(_.split(pContent, '\n')), '#')),
-      link: `/blog/${owner}/${repo}/posts/${post.path}`,
+      link: `/blogs/${owner}/${repo}/posts/${post.path}`,
       author: commit.commit.author.name,
       publishedDate: Moment(new Date(commit.commit.author.date)).format('MMMM DD, YYYY'),
       lastModifiedDate: Moment(new Date(_.first(pCommits).commit.author.date)).format('MMMM DD, YYYY'),

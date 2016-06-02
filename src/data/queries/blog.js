@@ -5,6 +5,7 @@ import Promise from 'bluebird';
 import { GraphQLList as List, GraphQLString as StringType, GraphQLNonNull as NonNull } from 'graphql';
 
 import BlogType from '../types/BlogType';
+import { host } from '../../config';
 import { getRepoTree, getTextFile, getUserData, handler } from '../../core/github';
 
 const blog = {
@@ -33,7 +34,7 @@ const blog = {
         return Promise.all(_.map(_.filter(tree, file => _.endsWith(file.path, '.css')), style => getTextFile(owner, repo, style.path))).then(styles => {
           return {
             title: config.title,
-            url: `/blogs/${owner}/${repo}`,
+            url: `http://${host}/blogs/${owner}/${repo}`,
             user: owner,
             repo: repo,
             owner: {
