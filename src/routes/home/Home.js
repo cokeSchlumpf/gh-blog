@@ -9,34 +9,19 @@
 
 import React, { PropTypes } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
+
 import s from './Home.scss';
-import PostSnippet from '../../components/PostSnippet';
-import { application as Config } from '../../config';
 
 const title = 'React Starter Kit';
 
 function Home({posts}, context) {
-  context.setTitle(Config.name);
-
-  const postsRendered = posts.map((item, index) => (
-    <PostSnippet {...item} key={ item.key } />
-  ));
+  context.setTitle('gh-blog - blogging made simple');
 
   return (
     <div>
-      { postsRendered }
+      HOME.
     </div>);
 }
-
-Home.propTypes = {
-  posts: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    link: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired,
-    publishedDate: PropTypes.string.isRequired,
-    contentSnippet: PropTypes.string.isRequired
-  })).isRequired,
-};
 
 Home.contextTypes = {
   setTitle: PropTypes.func.isRequired

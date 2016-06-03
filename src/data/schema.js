@@ -10,19 +10,17 @@
 import { GraphQLSchema as Schema, GraphQLObjectType as ObjectType } from 'graphql';
 
 import blog from './queries/blog';
-import posts from './queries/posts';
 import post from './queries/post';
+import posts from './queries/posts';
 import render from './queries/render';
-import content from './queries/content';
 
 const schema = new Schema({
   query: new ObjectType({
     name: 'Query',
     fields: {
       blog,
-      content,
-      posts,
       post,
+      posts,
       render
     }
   }),
