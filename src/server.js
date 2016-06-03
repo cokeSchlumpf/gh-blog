@@ -21,7 +21,7 @@ import PrettyError from 'pretty-error';
 import schema from './data/schema';
 import routes from './routes';
 import assets from './assets';
-import { port, auth, analytics } from './config';
+import { port, analytics } from './config';
 
 const app = express();
 
@@ -41,17 +41,6 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
-
-//
-// Authentication
-// -----------------------------------------------------------------------------
-app.use(expressJwt({
-  secret: auth.jwt.secret,
-  credentialsRequired: false,
-  /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
-  getToken: req => req.cookies.id_token,
-/* jscs:enable requireCamelCaseOrUpperCaseIdentifiers */
-}));
 
 //
 // Register API middleware
