@@ -2,7 +2,7 @@
 
 > An instance of gh-blog is running on IBM Bluemix. Visit [reTHINKit](http://gh-blog.mybluemix.net/blogs/cokeSchlumpf/rethink-it) for a living example.
 
-**gh-blog** is a lightweight Node.js based web application to publish your public GitHub repository as a blog utilizing GitHub's markdown rendering. It's *clean and simple* and offers *absolutely **no** cool features* like a WYSIWYG editor, multi-author or draft- and archive management for your posts. All this can be achieved with your usual tools like [Atom](https://atom.io/) and [GitHub](http://www.github.com).
+**gh-blog** is a lightweight Node.js based web application to publish public GitHub repository as a blog utilizing GitHub's markdown rendering. It's *clean and simple* and offers *absolutely **no** cool features* like a WYSIWYG editor, multi-author or draft- and archive management for posts. All this can be achieved with common tools like [Atom](https://atom.io/) and [GitHub](http://www.github.com).
 
 ### Getting started
 
@@ -28,12 +28,12 @@ gh-blog will recognize the `.blog` file to identify the repository as a valid bl
 }
 ```
 
-The Jade files in the `template` directory will be used to render your blog. See [How to create templates](./how-to/create-templates.md) for details.
+The Jade files in the `template` directory will be used to render the blog. See [How to create templates](./how-to/create-templates.md) for details.
 
-All markdown files within your repository (with extension `.md`), except for `README.md`, will be considered as blog posts. Each blog post should follow a simple structure to be parsed correctly:
+All markdown files within the repository (with extension `.md`), except for `README.md`, will be considered as blog posts. Each blog post should follow a simple structure to be parsed correctly:
 
 ```markdown
-# The first line should contain the title of your post
+# The first line should contain the title of the post
 
 Then you can just write whatever you want with every markdown feature available on GitHub.
 
@@ -41,16 +41,16 @@ You can mark the split between the preview and the rest of the post with ...
 
 ---
 
-... a horizontal line. On the single view of your post, the preview as well as the rest of the article will be displayed.
+... a horizontal line. On the single view of the post, the preview as well as the rest of the article will be displayed.
 ```
 
 Make sure to use absolute URLs with [https://raw.githubusercontent.com](https://raw.githubusercontent.com) to link images or attachments.
 
-**Finally** visit `http://gh-blog.mybluemix.net/blogs/:gitUser/:gitRepo`, e.g. [http://gh-blog.mybluemix.net/blogs/cokeSchlumpf/rethink-it](http://gh-blog.mybluemix.net/blogs/cokeSchlumpf/rethink-it), to view your Blog.
+**Finally** visit `http://gh-blog.mybluemix.net/blogs/:gitUser/:gitRepo`, e.g. [http://gh-blog.mybluemix.net/blogs/cokeSchlumpf/rethink-it](http://gh-blog.mybluemix.net/blogs/cokeSchlumpf/rethink-it), to view the Blog.
 
 ### How to create templates
 
-Three [Jade](http://www.jade-lang.com) templates are used to render your blog:
+Three [Jade](http://www.jade-lang.com) templates are used to render the blog:
 
 ```
 /
