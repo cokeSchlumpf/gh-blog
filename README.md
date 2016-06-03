@@ -30,12 +30,12 @@ gh-blog will recognize the `.blog` file to identify the repository as a valid bl
 
 The Jade files in the `template` directory will be used to render the blog. See [How to create templates](./how-to/create-templates.md) for details.
 
-All markdown files within the repository (with extension `.md`), except for `README.md`, will be considered as blog posts. Each blog post should follow a simple structure to be parsed correctly:
+All Markdown files within the repository (with extension `.md`), except for `README.md`, will be considered as blog posts. Each blog post should follow a simple structure to be parsed correctly:
 
 ```markdown
 # The first line should contain the title of the post
 
-Then you can just write whatever you want with every markdown feature available on GitHub.
+Then you can just write whatever you want with every Markdown feature available on GitHub.
 
 You can mark the split between the preview and the rest of the post with ...
 
@@ -108,7 +108,7 @@ The following data structures will be available while rendering:
 }
 ```
 
-**Note:** The content of the posts is rendered by GitHub's markdown engine, thus the markup will also contain all CSS style names from GitHub. gh-blog always includes a CSS file including all necessary styles to display syntax-highlighting, cite-boxes, etc..
+**Note:** The content of the posts is rendered by GitHub's Markdown engine, thus the markup will also contain all CSS style names from GitHub. gh-blog always includes a CSS file including all necessary styles to display syntax-highlighting, cite-boxes, etc..
 
 ### Feedback and support is welcome!
 
