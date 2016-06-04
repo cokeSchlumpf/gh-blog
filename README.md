@@ -98,7 +98,9 @@ The following data structures will be available while rendering:
       contentSnippet  // Preview content of the post
     ],
     pages,            // Available page count
-    page              // Current page
+    page,             // Current page
+    nextUrl,          // The URL of the next page, if page < pages
+    prevPage          // The URL of the previous page, of prevPage > 1
   },
   post {              // Only in post.jade
     title,            // The title of the post

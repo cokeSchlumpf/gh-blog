@@ -28,8 +28,6 @@ export const renderPost = (owner, repo, post) => {
       content: content
     }
   }).then((post) => {
-    console.log(post.publishedTime);
-
     return Promise.join(
       renderMarkdown(owner, repo, `${post.key}-snippet`, post.contentSnippet),
       renderMarkdown(owner, repo, `${post.key}-content`, post.content),
