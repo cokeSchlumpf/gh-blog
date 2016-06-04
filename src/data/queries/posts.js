@@ -7,6 +7,7 @@ import { GraphQLList as List, GraphQLNonNull as NonNull, GraphQLString as String
 import { getRepoTree, getTextFile } from '../../core/github';
 import { renderPost } from '../../core/posts';
 import { PostItemsType } from '../types/PostType';
+import { host } from '../../config';
 
 const events = {
   type: PostItemsType,
@@ -40,14 +41,14 @@ const events = {
       return getTextFile(owner, repo, '.blog').then(pConfig => {
         const config = JSON.parse(pConfig);
         const ppp = pConfig.postPerPage || 3;
-
-        console.log(`${page}, ${ppp}, ${posts.length}`);
-
+        const pages = Math.ceil(posts.length / ppp);
         return {
           posts: _.slice(_.orderBy(posts, ['publishedTime'], ['desc']), (page - 1) * ppp, page * ppp),
-          pages: Math.ceil(posts.length / ppp),
-          page: page
-        };
+          pages: pages,
+          page: page,
+          nextUrl: page < pages && `http://${host}/blogs/${owner}/${repo}/history/${page + 1}`,
+          prevUrl: page > 1 && `http://${host}/blogs/${owner}/${repo}/history/${page - 1}`
+        }
       });
     });
   }

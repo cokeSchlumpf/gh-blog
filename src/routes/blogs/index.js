@@ -56,7 +56,9 @@ const posts = (page) => (owner, repo) => {
         |      contentSnippet
         |    },
         |    pages,
-        |    page
+        |    page,
+        |    nextUrl,
+        |    prevUrl
         |  }
         }`);
 
@@ -81,7 +83,6 @@ const posts = (page) => (owner, repo) => {
         }`);
 
       resolve(fetch(renderQuery).then(res => {
-        console.log(res);
         const data = JSON.parse(Base64.decode(res.data.render.data));
         return <Content content={ res.data.render.result } title={ data.blog.title } styles={ data.blog.template.styles } />;
       }));
@@ -97,7 +98,6 @@ export default {
 
   async action({next, params}) {
     const child = await next();
-    console.log(child);
     return child(params.owner, params.repo).catch(e => {
       console.log(e);
       console.error(e);

@@ -45,6 +45,12 @@ export const PostItemsType = new ObjectType({
     },
     page: {
       type: IntType
+    },
+    nextUrl: {
+      type: StringType
+    },
+    prevUrl: {
+      type: StringType
     }
   }
 });
