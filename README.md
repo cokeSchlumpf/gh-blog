@@ -24,7 +24,8 @@ gh-blog will recognize the `.blog` file to identify the repository as a valid bl
 ```json
 {
   "title": "reTHINKit",
-  "twitter": "cokeSchlumpf"
+  "twitter": "cokeSchlumpf",
+  "postPerPage": 3
 }
 ```
 
@@ -88,13 +89,17 @@ The following data structures will be available while rendering:
       github          // GitHub user profile URL
     }
   },
-  posts [             // Only in posts.jade, ordered by publishedDate desc
-    title,            // The title of the post
-    link,             // URI of the post without host, e.g /:user/:repo/posts/:file
-    author,           // Name of the author who committed the file initially
-    publishedDate,    // Date of the first commit of the post
-    contentSnippet    // Preview content of the post
-  ],
+  posts {             // Only in posts.jade, ordered by publishedDate desc
+    posts [           // Posts for the current page
+      title,          // The title of the post
+      link,           // URI of the post without host, e.g /:user/:repo/posts/:file
+      author,         // Name of the author who committed the file initially
+      publishedDate,  // Date of the first commit of the post
+      contentSnippet  // Preview content of the post
+    ],
+    pages,            // Available page count
+    page              // Current page
+  },
   post {              // Only in post.jade
     title,            // The title of the post
     link,             // URI of the post without host, e.g /:user/:repo/posts/:file

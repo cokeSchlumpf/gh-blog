@@ -1,4 +1,4 @@
-import { GraphQLObjectType as ObjectType, GraphQLInt as IntType, GraphQLString as StringType, GraphQLNonNull as NonNull } from 'graphql';
+import { GraphQLList as List, GraphQLObjectType as ObjectType, GraphQLInt as IntType, GraphQLString as StringType, GraphQLNonNull as NonNull } from 'graphql';
 
 const PostType = new ObjectType({
   name: 'PostItem',
@@ -22,7 +22,7 @@ const PostType = new ObjectType({
       type: new NonNull(StringType)
     },
     publishedTime: {
-      type: IntType
+      type: StringType
     },
     contentSnippet: {
       type: StringType
@@ -31,6 +31,22 @@ const PostType = new ObjectType({
       type: StringType
     }
   },
+});
+
+export const PostItemsType = new ObjectType({
+  name: 'PostItems',
+
+  fields: {
+    posts: {
+      type: new List(PostType)
+    },
+    pages: {
+      type: IntType
+    },
+    page: {
+      type: IntType
+    }
+  }
 });
 
 export default PostType;

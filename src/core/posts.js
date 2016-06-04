@@ -22,12 +22,14 @@ export const renderPost = (owner, repo, post) => {
       link: `/blogs/${owner}/${repo}/posts/${post.path}`,
       author: commit.commit.author.name,
       publishedDate: Moment(new Date(commit.commit.author.date)).format('MMMM DD, YYYY'),
-      publishedTime: new Date(commit.commit.author.date).getTime(),
+      publishedTime: (new Date(commit.commit.author.date)).getTime() * 1,
       lastModifiedDate: Moment(new Date(_.first(pCommits).commit.author.date)).format('MMMM DD, YYYY'),
       contentSnippet: contentSnippet,
       content: content
     }
   }).then((post) => {
+    console.log(post.publishedTime);
+
     return Promise.join(
       renderMarkdown(owner, repo, `${post.key}-snippet`, post.contentSnippet),
       renderMarkdown(owner, repo, `${post.key}-content`, post.content),
