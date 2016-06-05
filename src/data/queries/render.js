@@ -8,6 +8,7 @@ import { GraphQLList as List, GraphQLString as StringType, GraphQLNonNull as Non
 
 import RenderType from '../types/RenderType';
 import Query from '../../core/fetch-graphql';
+import { getTextFile } from '../../core/github';
 
 const render = {
   type: RenderType,
@@ -25,27 +26,29 @@ const render = {
   },
 
   resolve(request, {queries, templates, selects}) {
-    return Promise.all(_.map(queries, (queryEncoded) => {
-      const query = Base64.decode(queryEncoded);
-      return Query(query);
-    })).then(results => {
-      const data = _.reduce(results, (collect, result) => {
-        return _.assign({}, collect, result.data);
-      }, {});
+    return Promise.join(
+      Promise.all(_.map(templates, file => getTextFile(owner, repo, '.template/index.jade', 'index default'))),
+      Promise.all(_.map(queries, (queryEncoded) => {
+        const query = Base64.decode(queryEncoded);
+        return Query(query);
+      })), (templates, results) => {
+        const data = _.reduce(results, (collect, result) => {
+          return _.assign({}, collect, result.data);
+        }, {});
 
-      return {
-        data: Base64.encode(JSON.stringify(_.reduce(selects, (collect, key) => {
-          _.set(collect, key, _.get(data, key));
-          return collect;
-        }, { }))),
-        result: _.reduce(templates, (collect, templateKey) => {
-          const template = _.get(data, templateKey);
-          return _.assign({}, collect, {
-            content: jade.render(template, collect)
-          });
-        }, data).content
-      };
-    }).catch(e => {
+        return {
+          data: Base64.encode(JSON.stringify(_.reduce(selects, (collect, key) => {
+            _.set(collect, key, _.get(data, key));
+            return collect;
+          }, { }))),
+          result: _.reduce(templates, (collect, templateKey) => {
+            const template = _.get(data, templateKey);
+            return _.assign({}, collect, {
+              content: jade.render(template, collect)
+            });
+          }, data).content
+        };
+      }).catch(e => {
       console.log(e);
       console.error(e);
       console.log(e.stack);

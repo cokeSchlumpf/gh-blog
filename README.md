@@ -10,12 +10,12 @@ Simply set up a GitHub repository with the following structure or fork [cokeSchl
 
 ```
 /
-  ├ template
+  ├ .blog
+  ├ .template/
   │ ├ index.jade
   │ ├ post.jade
   │ ├ posts.jade
   │ └ styles.css
-  ├ .blog
   └ my-first-post.md
 ```
 
@@ -25,6 +25,7 @@ gh-blog will recognize the `.blog` file to identify the repository as a valid bl
 {
   "title": "reTHINKit",
   "twitter": "cokeSchlumpf",
+  "dateFormat": "MMMM DD, YYYY",
   "postPerPage": 3
 }
 ```
@@ -55,7 +56,7 @@ Three [Jade](http://www.jade-lang.com) templates are used to render the blog:
 
 ```
 /
-  └ template
+  └ .template/
     ├ index.jade
     ├ post.jade
     ├ posts.jade

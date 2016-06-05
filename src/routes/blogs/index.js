@@ -70,8 +70,8 @@ const posts = (page) => (owner, repo) => {
         |      "${Base64.encode(postsQuery)}"
         |    ]
         |    templates: [
-        |      "blog.template.posts",
-        |      "blog.template.index"
+        |      ".template/posts.jade",
+        |      ".template/index.jade"
         |    ]
         |    selects: [
         |      "blog.title",
@@ -82,7 +82,10 @@ const posts = (page) => (owner, repo) => {
         |    }
         }`);
 
+      console.log(renderQuery);
+
       resolve(fetch(renderQuery).then(res => {
+        console.log(res);
         const data = JSON.parse(Base64.decode(res.data.render.data));
         return <Content content={ res.data.render.result } title={ data.blog.title } styles={ data.blog.template.styles } />;
       }));
@@ -122,7 +125,15 @@ export default {
       }
     },
     {
+      path: '/static/:id*',
 
+      async action({params}) {
+        return (owner, repo) => {
+
+        }
+      }
+    },
+    {
       path: '/posts/:id*',
 
       async action(context) {
@@ -152,8 +163,8 @@ export default {
                 |      "${Base64.encode(postQuery)}"
                 |    ]
                 |    templates: [
-                |      "blog.template.post",
-                |      "blog.template.index"
+                |      ".template/post.jade",
+                |      ".template/index.jade"
                 |    ]
                 |    selects: [
                 |      "blog.title",

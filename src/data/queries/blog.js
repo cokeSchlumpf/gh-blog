@@ -6,7 +6,7 @@ import { GraphQLList as List, GraphQLString as StringType, GraphQLNonNull as Non
 
 import BlogType from '../types/BlogType';
 import { host } from '../../config';
-import { getRepoTree, getTextFile, getUserData, handler } from '../../core/github';
+import { getRepoTree, getTextFile, getUserData } from '../../core/github';
 
 const blog = {
   type: BlogType,
@@ -25,9 +25,9 @@ const blog = {
       getRepoTree(owner, repo),
       getUserData(owner),
       getTextFile(owner, repo, '.blog'),
-      getTextFile(owner, repo, 'template/index.jade', 'index default'),
-      getTextFile(owner, repo, 'template/posts.jade', 'posts default'),
-      getTextFile(owner, repo, 'template/post.jade', 'index default'),
+      getTextFile(owner, repo, '.template/index.jade', 'index default'),
+      getTextFile(owner, repo, '.template/posts.jade', 'posts default'),
+      getTextFile(owner, repo, '.template/post.jade', 'index default'),
       ({tree}, user, pConfig, pIndexTemplate, pPostsTemplate, pPostTemplate) => {
         const config = JSON.parse(pConfig);
 

@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import Moment from 'moment';
 import Promise from 'bluebird';
-import { getCommits, getText, renderMarkdown } from './github';
+import { getCommits, getText, getTextFile, renderMarkdown } from './github';
 
 export const renderPost = (owner, repo, post) => {
-  return Promise.join(getText(owner, repo, post.sha), getCommits(owner, repo, post.path), (pContent, pCommits) => {
+  return Promise.join(getText(owner, repo, post.sha), getCommits(owner, repo, post.path), getTextFile(owner, repo, '.blog'), (pContent, pCommits, pConfig) => {
     const commit = _.last(pCommits);
 
     let content = _.trim(pContent.substr(pContent.indexOf('\n') + 1), '\n');
@@ -21,9 +21,9 @@ export const renderPost = (owner, repo, post) => {
       title: _.trim(_.trimStart(_.head(_.split(pContent, '\n')), '#')),
       link: `/blogs/${owner}/${repo}/posts/${post.path}`,
       author: commit.commit.author.name,
-      publishedDate: Moment(new Date(commit.commit.author.date)).format('MMMM DD, YYYY'),
+      publishedDate: Moment(new Date(commit.commit.author.date)).format(pConfig.dateFormat || 'MMMM DD, YYYY'),
       publishedTime: (new Date(commit.commit.author.date)).getTime() * 1,
-      lastModifiedDate: Moment(new Date(_.first(pCommits).commit.author.date)).format('MMMM DD, YYYY'),
+      lastModifiedDate: Moment(new Date(_.first(pCommits).commit.author.date)).format(pConfig.dateFormat || 'MMMM DD, YYYY'),
       contentSnippet: contentSnippet,
       content: content
     }
