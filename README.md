@@ -11,6 +11,8 @@ Simply set up a GitHub repository with the following structure or fork [cokeSchl
 ```
 /
   ├ .blog
+  ├ .static/
+  │ └ about.jade
   ├ .template/
   │ ├ index.jade
   │ ├ post.jade
@@ -26,7 +28,10 @@ gh-blog will recognize the `.blog` file to identify the repository as a valid bl
   "title": "reTHINKit",
   "twitter": "cokeSchlumpf",
   "dateFormat": "MMMM DD, YYYY",
-  "postPerPage": 3
+  "postPerPage": 3,
+  "staticTitles": {
+    "about": "About me"
+  }
 }
 ```
 
@@ -66,8 +71,8 @@ Three [Jade](http://www.jade-lang.com) templates are used to render the blog:
 
 gh-blog will also inject all files with `*.css` file-extension into the webpage.
 
-- **posts.jade** is used to render the blog's landing page (`/:gitUser/:gitRepo`).
-- **post.jade** is used to render the view of an article (`/:gitUser/:gitRepo/posts/:markdownFilePath`).
+- **posts.jade** is used to render the blog's landing page (`/blogs/:gitUser/:gitRepo`).
+- **post.jade** is used to render the view of an article (`/blogs/:gitUser/:gitRepo/posts/:markdownFilePath`).
 - **index.jade** is always rendered, the rendered `posts.jade` or `post.jade` are injected.
 
 The following data structures will be available while rendering:
@@ -117,6 +122,19 @@ The following data structures will be available while rendering:
 ```
 
 **Note:** The content of the posts is rendered by GitHub's Markdown engine, thus the markup will also contain all CSS style names from GitHub. gh-blog always includes a CSS file including all necessary styles to display syntax-highlighting, cite-boxes, etc..
+
+### How to use static content
+
+Set up static content by putting any `.jade` file into the `/.static` directory of the repository. To open static contents use the URL `/blogs/:user/:repo/static/:path` where `path` is the relative path of the file from within the `.static` directory without the `.jade` extension. The HTML page title can be configured in `.blog` configuration:
+
+```json
+{
+  "staticTitles": {
+    "about": "About me",
+    "${path}": "Title"
+  }
+}
+```
 
 ### Feedback and support is welcome!
 
