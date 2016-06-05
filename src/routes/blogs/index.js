@@ -156,12 +156,8 @@ export default {
               const data = JSON.parse(Base64.decode(res.data.render.data));
               let title = data.blog.title;
 
-              console.log(data.blog);
-
               if (data.blog.template.titles) {
                 const titleObj = _.find(data.blog.template.titles, ({file}) => file === params.id);
-                console.log(titleObj);
-
                 if (titleObj) {
                   title = `${titleObj.title} - ${title}`;
                 }
