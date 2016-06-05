@@ -25,10 +25,7 @@ const blog = {
       getRepoTree(owner, repo),
       getUserData(owner),
       getTextFile(owner, repo, '.blog'),
-      getTextFile(owner, repo, '.template/index.jade', 'index default'),
-      getTextFile(owner, repo, '.template/posts.jade', 'posts default'),
-      getTextFile(owner, repo, '.template/post.jade', 'index default'),
-      ({tree}, user, pConfig, pIndexTemplate, pPostsTemplate, pPostTemplate) => {
+      ({tree}, user, pConfig) => {
         const config = JSON.parse(pConfig);
 
         return Promise.all(_.map(_.filter(tree, file => _.endsWith(file.path, '.css')), style => getTextFile(owner, repo, style.path))).then(styles => {
@@ -49,9 +46,12 @@ const blog = {
             },
             template: {
               styles: styles,
-              index: pIndexTemplate,
-              posts: pPostsTemplate,
-              post: pPostTemplate
+              titles: _.map(config.staticTitles || [], (title, file) => {
+                return {
+                  file: file,
+                  title: title
+                }
+              })
             }
           };
         });

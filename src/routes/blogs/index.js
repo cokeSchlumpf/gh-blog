@@ -18,25 +18,26 @@ import Content from './Content.js';
 const blogQuery = (owner, repo) => s.stripMargin(
   `{
   |  blog(owner: "${owner}", repo: "${repo}") {
-  |    title
-  |    url
-  |    baseUrl
-  |    user
-  |    repo
+  |    title,
+  |    url,
+  |    baseUrl,
+  |    user,
+  |    repo,
   |    owner {
-  |      name
-  |      url
-  |      company
-  |      location
-  |      avatar
-  |      twitter
+  |      name,
+  |      url,
+  |      company,
+  |      location,
+  |      avatar,
+  |      twitter,
   |      github
-  |    }
+  |    },
   |    template {
   |      styles
-  |      index
-  |      posts
-  |      post
+  |      titles {
+  |        file,
+  |         title
+  |      }
   |    }
   |  }
   }`);
@@ -136,7 +137,7 @@ export default {
                 |    repo: "${repo}",
                 |    queries: [
                 |      "${Base64.encode(blogQuery(owner, repo))}"
-                |    ]
+                |    ],
                 |    templates: [
                 |      ".static/${params.id}.jade",
                 |      ".template/index.jade"
@@ -144,22 +145,26 @@ export default {
                 |    selects: [
                 |      "blog.title",
                 |      "blog.template.styles"
-                |      "blog.staticTitles"
+                |      "blog.template.titles"
                 |    ]) {
                 |      data,
                 |      result
                 |    }
                 }`);
 
-            console.log(renderQuery);
-
             resolve(fetch(renderQuery).then(res => {
-              console.log(Base64.decode(res.data.render.data));
               const data = JSON.parse(Base64.decode(res.data.render.data));
               let title = data.blog.title;
 
-              if (data.blog.staticTitles && data.blog.staticTitles[params.id]) {
-                title = `${data.blog.staticTitles[params.id]} - ${title}`;
+              console.log(data.blog);
+
+              if (data.blog.template.titles) {
+                const titleObj = _.find(data.blog.template.titles, ({file}) => file === params.id);
+                console.log(titleObj);
+
+                if (titleObj) {
+                  title = `${titleObj.title} - ${title}`;
+                }
               }
 
               return <Content content={ res.data.render.result } title={ `${title}` } styles={ data.blog.template.styles } />;

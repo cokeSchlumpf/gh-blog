@@ -33,14 +33,18 @@ const TemplateType = new ObjectType({
     styles: {
       type: new List(StringType)
     },
-    index: {
-      type: new NonNull(StringType)
-    },
-    posts: {
-      type: new NonNull(StringType)
-    },
-    post: {
-      type: new NonNull(StringType)
+    titles: {
+      type: new List(new ObjectType({
+        name: 'Title',
+        fields: {
+          file: {
+            type: new NonNull(StringType)
+          },
+          title: {
+            type: new NonNull(StringType)
+          }
+        }
+      }))
     }
   }
 });
