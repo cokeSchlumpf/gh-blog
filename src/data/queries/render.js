@@ -14,6 +14,12 @@ const render = {
   type: RenderType,
 
   args: {
+    owner: {
+      type: new NonNull(StringType)
+    },
+    repo: {
+      type: new NonNull(StringType)
+    },
     queries: {
       type: new NonNull(new List(StringType))
     },
@@ -25,9 +31,9 @@ const render = {
     }
   },
 
-  resolve(request, {queries, templates, selects}) {
+  resolve(request, {owner, repo, queries, templates, selects}) {
     return Promise.join(
-      Promise.all(_.map(templates, file => getTextFile(owner, repo, '.template/index.jade', 'index default'))),
+      Promise.all(_.map(templates, file => getTextFile(owner, repo, file))),
       Promise.all(_.map(queries, (queryEncoded) => {
         const query = Base64.decode(queryEncoded);
         return Query(query);
@@ -41,8 +47,7 @@ const render = {
             _.set(collect, key, _.get(data, key));
             return collect;
           }, { }))),
-          result: _.reduce(templates, (collect, templateKey) => {
-            const template = _.get(data, templateKey);
+          result: _.reduce(templates, (collect, template) => {
             return _.assign({}, collect, {
               content: jade.render(template, collect)
             });

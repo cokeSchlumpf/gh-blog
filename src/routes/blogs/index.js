@@ -65,6 +65,8 @@ const posts = (page) => (owner, repo) => {
       const renderQuery = s.stripMargin(
         `{
         |  render(
+        |    owner: "${owner}",
+        |    repo: "${repo}",
         |    queries: [
         |      "${Base64.encode(blogQuery(owner, repo))}",
         |      "${Base64.encode(postsQuery)}"
@@ -82,10 +84,7 @@ const posts = (page) => (owner, repo) => {
         |    }
         }`);
 
-      console.log(renderQuery);
-
       resolve(fetch(renderQuery).then(res => {
-        console.log(res);
         const data = JSON.parse(Base64.decode(res.data.render.data));
         return <Content content={ res.data.render.result } title={ data.blog.title } styles={ data.blog.template.styles } />;
       }));
@@ -129,7 +128,43 @@ export default {
 
       async action({params}) {
         return (owner, repo) => {
+          return new Promise((resolve, reject) => {
+            const renderQuery = s.stripMargin(
+              `{
+                |  render(
+                |    owner: "${owner}",
+                |    repo: "${repo}",
+                |    queries: [
+                |      "${Base64.encode(blogQuery(owner, repo))}"
+                |    ]
+                |    templates: [
+                |      ".static/${params.id}.jade",
+                |      ".template/index.jade"
+                |    ]
+                |    selects: [
+                |      "blog.title",
+                |      "blog.template.styles"
+                |      "blog.staticTitles"
+                |    ]) {
+                |      data,
+                |      result
+                |    }
+                }`);
 
+            console.log(renderQuery);
+
+            resolve(fetch(renderQuery).then(res => {
+              console.log(Base64.decode(res.data.render.data));
+              const data = JSON.parse(Base64.decode(res.data.render.data));
+              let title = data.blog.title;
+
+              if (data.blog.staticTitles && data.blog.staticTitles[params.id]) {
+                title = `${data.blog.staticTitles[params.id]} - ${title}`;
+              }
+
+              return <Content content={ res.data.render.result } title={ `${title}` } styles={ data.blog.template.styles } />;
+            }));
+          });
         }
       }
     },
@@ -158,6 +193,8 @@ export default {
             const renderQuery = s.stripMargin(
               `{
                 |  render(
+                |    owner: "${owner}",
+                |    repo: "${repo}",
                 |    queries: [
                 |      "${Base64.encode(blogQuery(owner, repo))}",
                 |      "${Base64.encode(postQuery)}"
