@@ -97,7 +97,7 @@ const posts = (page) => (owner, repo) => {
 
 export default {
 
-  path: '/blogs/:owner/:repo',
+  path: '/:owner/:repo',
 
   async action({next, params}) {
     const child = await next();

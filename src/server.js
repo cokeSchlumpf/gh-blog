@@ -57,6 +57,10 @@ app.use('/graphql', expressGraphQL(req => ({
 //
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------
+app.use('/blog', (req, res) => {
+  res.redirect(req.url);
+})
+
 app.get('*', async (req, res, next) => {
   try {
     let css = [];
