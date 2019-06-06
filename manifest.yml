@@ -2,7 +2,8 @@ applications:
 - path: .
   memory: 256M
   instances: 1
-  domain: mybluemix.net
+  routes: 
+    - route: www.pushed.to
+    - route: gh-blog.mybluemix.net
   name: gh-blog
-  host: gh-blog
   disk_quota: 1024M

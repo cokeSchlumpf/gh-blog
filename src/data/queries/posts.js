@@ -46,8 +46,8 @@ const events = {
           posts: _.slice(_.orderBy(posts, ['publishedTime'], ['desc']), (page - 1) * ppp, page * ppp),
           pages: pages,
           page: page,
-          nextUrl: page < pages && `http://${host}/blogs/${owner}/${repo}/history/${page + 1}`,
-          prevUrl: page > 1 && `http://${host}/blogs/${owner}/${repo}/history/${page - 1}`
+          nextUrl: page < pages && `http://${host}/${owner}/${repo}/history/${page + 1}`,
+          prevUrl: page > 1 && `http://${host}/${owner}/${repo}/history/${page - 1}`
         }
       });
     });
