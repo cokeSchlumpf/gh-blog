@@ -31,7 +31,7 @@
     "js-base64": "^2.1.9",
     "jsonwebtoken": "5.7.0",
     "lodash": "^4.12.0",
-    "markdown-it": "6.0.1",
+    "markdown-it": "12.3.2",
     "moments": "0.0.2",
     "node-cache": "^3.2.1",
     "node-fetch": "1.5.1",
